@@ -41,7 +41,7 @@ class Calendar extends React.Component {
     return (
       <tr key={hour}>
         <td className="hour">{hour}:00</td>
-        {events.map(event => event)}
+        {events}
       </tr>
     );
   }
