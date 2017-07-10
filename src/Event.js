@@ -9,7 +9,7 @@ class Event extends React.Component {
   }
 
   render() {
-    const event = this.props.data[0];
+    const event = this.props.data;
     const startDate = new Date(event.start_time);
     const endDate = new Date(event.end_time);
 
@@ -32,7 +32,8 @@ class Event extends React.Component {
 }
 
 Event.propTypes = {
-  data: PropTypes.array.isRequired
+  data: PropTypes.object.isRequired,
+  setDraggedId: PropTypes.func.isRequired
 }
 
 export default Event
