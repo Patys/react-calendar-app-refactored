@@ -50,7 +50,8 @@ class App extends Component {
         "day_number": 3
       }
     ],
-    dragged: {}
+    dragged: null,
+    allowChange: true
   }
 
   updateData = (data) => {
@@ -59,11 +60,13 @@ class App extends Component {
     // find dragged element
     let dragged = this.state.data.find(d => d.id === parseInt(data.id, radix));
 
-    if(dragged !== undefined)
-      this.setState({dragged});
+    // console.log(dragged, ' ', this.state.dragged);
+
+    if(dragged !== undefined && this.state.allowChange)
+      this.setState({dragged, allowChange: false});
 
     // there is in state dragged element and on data.id is empty so there is no event
-    if(this.state.dragged !== undefined && data.id === null) {
+    if(this.state.dragged !== undefined && this.state.dragged !== null && dragged === undefined) {
       // create new start_time
       let newTime = new Date(this.state.dragged.start_time);
       newTime.setHours(parseInt(data.data.target.hour, radix));
@@ -74,21 +77,24 @@ class App extends Component {
       endTime.setHours(parseInt(data.data.target.hour, radix)+1);
       endTime.setDate(data.data.target.day);
 
-      let dragged = this.state.dragged;
-
-      dragged.start_time = newTime.toISOString();
-      dragged.end_time = endTime.toISOString();
+      let el = this.state.dragged;
+      el.start_time = newTime.toISOString();
+      el.end_time = endTime.toISOString();
 
       let newArr = this.state.data.filter(d => d.id !== parseInt(data.id, radix));
-      newArr.push(dragged);
+      newArr.push(el);
       this.setState({data: newArr});
     }
+  }
+
+  clearDrag = () => {
+    this.setState({allowChange: true});
   }
 
   render() {
     return (
       <div id="terminplaner">
-        <Calendar updateData={this.updateData} data={this.state.data}/>
+        <Calendar clearDrag={this.clearDrag} updateData={this.updateData} data={this.state.data}/>
       </div>
     );
   }

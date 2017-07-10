@@ -11,6 +11,10 @@ class Calendar extends React.Component {
     this.props.updateData({data: {target: {'day': day, 'hour': hour}}, id });
   }
 
+  onDragEnd = (e) => {
+    this.props.clearDrag();
+  }
+
   renderEvents(hour) {
     const days = [1,2,3,4,5,6,7];
 
@@ -21,7 +25,7 @@ class Calendar extends React.Component {
 
       const event = data ? <Event data={data}/> : null;
 
-      events.push(<td key={day} onDragOver={this.onDragOver({id: data ? data.id : null, hour, day})}>{event}</td>);
+      events.push(<td key={day} onDrop={this.onDragEnd} onDragOver={this.onDragOver({id: data ? data.id : null, hour, day})}>{event}</td>);
     });
 
     return (
