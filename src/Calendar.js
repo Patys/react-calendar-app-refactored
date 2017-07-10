@@ -2,6 +2,15 @@ import React from 'react'
 import Event from './Event'
 
 class Calendar extends React.Component {
+
+  state = {
+    draggedId : null
+  }
+
+  setDraggedId = (id) => {
+    this.setState({draggedId: id});
+  }
+
   onDragOver = (e) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
@@ -13,7 +22,7 @@ class Calendar extends React.Component {
     let hour = e.target.children.hour.innerHTML;
 
     if(day && day !== undefined && hour && hour !== undefined)
-      this.props.updateData({data: {target: {'day': day, 'hour': hour}}, id: e.dataTransfer.getData("id") });
+      this.props.updateData({data: {target: {'day': day, 'hour': hour}}, id: this.state.draggedId });
   }
 
   renderEvents(hour) {
@@ -24,7 +33,7 @@ class Calendar extends React.Component {
     days.forEach((day) => {
       let data = this.props.data.filter(data => (new Date(data.start_time).getDay()+1===day && new Date(data.start_time).getHours()===parseInt(hour, 10)));
 
-      const event = data[0] ? <Event data={data}/> : '';
+      const event = data[0] ? <Event setDraggedId={this.setDraggedId} data={data}/> : '';
 
       events.push(<td key={day} onDragOver={this.onDragOver}><span id="hour" hidden="true">{hour}</span><span id="day" hidden="true">{day+7}</span>{event}</td>);
     });

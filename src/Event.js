@@ -4,7 +4,8 @@ import PropTypes from 'prop-types'
 class Event extends React.Component {
   onDragStart = (e) => {
     e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData("id", e.currentTarget.children.eventId.innerHTML);
+    e.dataTransfer.setData("text/html", e.currentTarget);
+    this.props.setDraggedId(e.currentTarget.children.eventId.innerHTML);
   }
 
   render() {
