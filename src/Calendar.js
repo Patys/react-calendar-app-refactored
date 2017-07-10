@@ -35,7 +35,7 @@ class Calendar extends React.Component {
       let data = this.props.data.filter(data => (new Date(data.start_time).getDay()+1===day && new Date(data.start_time).getHours()===parseInt(hour, 10)));
 
       // TODO: remove setDraggedId
-      const event = data[0] ? <Event setDraggedId={this.setDraggedId} data={data[0]}/> : '';
+      const event = data[0] ? <Event setDraggedId={this.setDraggedId} data={data[0]}/> : null;
       // TODO: onDragOver={this.onDragOver(data.id)}
       events.push(<td key={day} onDragOver={this.onDragOver}><span id="hour" hidden="true">{hour}</span><span id="day" hidden="true">{day+7}</span>{event}</td>);
     });
