@@ -3,26 +3,12 @@ import Event from './Event'
 
 class Calendar extends React.Component {
 
-  state = {
-    draggedId : null
-  }
-
-  setDraggedId = (id) => {
-    this.setState({draggedId: id});
-  }
-
-  onDragOver = (e) => {
+  onDragOver = (data) => (e) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
 
-    if(e.target.children.day === undefined || e.target.children.hour === undefined)
-      return;
-
-    let day = e.target.children.day.innerHTML;
-    let hour = e.target.children.hour.innerHTML;
-
-    if(day && day !== undefined && hour && hour !== undefined)
-      this.props.updateData({data: {target: {'day': day, 'hour': hour}}, id: this.state.draggedId });
+    const {day, hour, id} = data;
+    this.props.updateData({data: {target: {'day': day, 'hour': hour}}, id });
   }
 
   renderEvents(hour) {
@@ -31,11 +17,11 @@ class Calendar extends React.Component {
     let events = [];
 
     days.forEach((day) => {
-      let data = this.props.data.filter(data => (new Date(data.start_time).getDay()+1===day && new Date(data.start_time).getHours()===parseInt(hour, 10)));
+      let data = this.props.data.find(data => (new Date(data.start_time).getDay()+1===day && new Date(data.start_time).getHours()===parseInt(hour, 10)));
 
-      const event = data[0] ? <Event setDraggedId={this.setDraggedId} data={data[0]}/> : '';
+      const event = data ? <Event data={data}/> : null;
 
-      events.push(<td key={day} onDragOver={this.onDragOver}><span id="hour" hidden="true">{hour}</span><span id="day" hidden="true">{day+7}</span>{event}</td>);
+      events.push(<td key={day} onDragOver={this.onDragOver({id: data ? data.id : null, hour, day})}>{event}</td>);
     });
 
     return (

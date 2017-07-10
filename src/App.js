@@ -49,30 +49,38 @@ class App extends Component {
         "start_hour": 0,
         "day_number": 3
       }
-    ]
+    ],
+    dragged: {}
   }
 
   updateData = (data) => {
     let radix = 10;
 
-    // find dropped element
-    let dropped = this.state.data.filter(d => d.id === parseInt(data.id, radix));
-    if(dropped.length > 0) {
+    // find dragged element
+    let dragged = this.state.data.find(d => d.id === parseInt(data.id, radix));
+
+    if(dragged !== undefined)
+      this.setState({dragged});
+
+    // there is in state dragged element and on data.id is empty so there is no event
+    if(this.state.dragged !== undefined && data.id === null) {
       // create new start_time
-      let newTime = new Date(dropped[0].start_time);
+      let newTime = new Date(this.state.dragged.start_time);
       newTime.setHours(parseInt(data.data.target.hour, radix));
       newTime.setDate(data.data.target.day);
 
       // create new end_time
-      let endTime = new Date(dropped[0].end_time);
+      let endTime = new Date(this.state.dragged.end_time);
       endTime.setHours(parseInt(data.data.target.hour, radix)+1);
       endTime.setDate(data.data.target.day);
 
-      dropped[0].start_time = newTime.toISOString();
-      dropped[0].end_time = endTime.toISOString();
+      let dragged = this.state.dragged;
+
+      dragged.start_time = newTime.toISOString();
+      dragged.end_time = endTime.toISOString();
 
       let newArr = this.state.data.filter(d => d.id !== parseInt(data.id, radix));
-      newArr.push(...dropped);
+      newArr.push(dragged);
       this.setState({data: newArr});
     }
   }

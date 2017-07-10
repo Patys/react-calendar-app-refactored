@@ -5,7 +5,6 @@ class Event extends React.Component {
   onDragStart = (e) => {
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData("text/html", e.currentTarget);
-    this.props.setDraggedId(e.currentTarget.children.eventId.innerHTML);
   }
 
   render() {
@@ -16,7 +15,6 @@ class Event extends React.Component {
     return (
       <div className="day">
         <div draggable="true" onDragStart={this.onDragStart}>
-          <span hidden="true" id="eventId">{event.id}</span>
           <div className="event q4 past">
             <p className="hours"> {
               startDate.getHours()}:{startDate.getMinutes()} - {endDate.getHours()}:{endDate.getMinutes()
@@ -32,8 +30,7 @@ class Event extends React.Component {
 }
 
 Event.propTypes = {
-  data: PropTypes.object.isRequired,
-  setDraggedId: PropTypes.func.isRequired
+  data: PropTypes.object.isRequired
 }
 
 export default Event
